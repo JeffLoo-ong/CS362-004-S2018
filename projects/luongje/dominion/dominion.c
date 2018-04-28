@@ -266,12 +266,13 @@ int playCard(int handPos, int choice1, int choice2, int choice3, struct gameStat
     {
       return -1;
     }
-  
   //reduce number of actions
   state->numActions--;
 
+  printf("Coins Before Update %d\n", state->coins);
   //update coins (Treasure cards may be added with card draws)
   updateCoins(state->whoseTurn, state, coin_bonus);
+  printf("Coins after card played %d\n", state->coins);
   
   return 0;
 }
@@ -1226,22 +1227,25 @@ int updateCoins(int player, struct gameState *state, int bonus)
   for (i = 0; i < state->handCount[player]; i++)
     {
       if (state->hand[player][i] == copper)
-  {
-    state->coins += 1;
-  }
-      else if (state->hand[player][i] == silver)
-  {
-    state->coins += 2;
-  }
-      else if (state->hand[player][i] == gold)
-  {
-    state->coins += 3;
-  } 
+      {
+        // printf("Added Copper\n");
+        state->coins += 1;
+      }
+          else if (state->hand[player][i] == silver)
+      {
+        // printf("Added Silver\n");
+        state->coins += 2;
+      }
+          else if (state->hand[player][i] == gold)
+      {
+        // printf("Added Gold\n");
+        state->coins += 3;
+      } 
     } 
 
   //add bonus
   state->coins += bonus;
-
+  // printf("Coins: %d\n", state->coins);
   return 0;
 }
 
@@ -1293,7 +1297,7 @@ int MineCard(int currentPlayer, struct gameState *state, int handPos, int choice
 {
   int j, i;
   j = state->hand[currentPlayer][choice1];  //store card we will trash
-
+  // printf("J val: %d", j); Is this a bug!?
   if (state->hand[currentPlayer][choice1] < silver || state->hand[currentPlayer][choice1] > gold)
   {
     return -1;

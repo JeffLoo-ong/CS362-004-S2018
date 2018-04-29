@@ -53,6 +53,17 @@ runtests: testDrawCard
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
 
+unittestresults.out: cardtest1 cardtest2 cardtest3 cardtest4 unittest1 unittest2 unittest3 unittest4 dominion.o
+	./cardtest1 >> unittestresults.out 2>&1
+	./cardtest2 >> unittestresults.out 2>&1
+	./cardtest3 >> unittestresults.out 2>&1
+	./cardtest4 >> unittestresults.out 2>&1
+	./unittest1 >> unittestresults.out 2>&1
+	./unittest2 >> unittestresults.out 2>&1
+	./unittest3 >> unittestresults.out 2>&1
+	./unittest4 >> unittestresults.out 2>&1
+	gcov dominion.c >> unittestresults.out 2>&1
+	cat dominion.c.gcov >> unittestresults.out 2>&1
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)

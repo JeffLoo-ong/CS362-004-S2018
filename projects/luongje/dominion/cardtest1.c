@@ -7,7 +7,7 @@
 #include "dominion_helpers.h"
 #include <string.h>
 #include <stdio.h>
-#include <assert.h>
+#include "myAssert.h"
 #include "rngs.h"
 
 // set NOISY_TEST to 0 to remove printfs from output
@@ -29,7 +29,6 @@ int main() {
 
     // Initialize game state
     r = initializeGame(NUM_PLAYERS, k, seed, &G); // Initialize a new game
-    assert(r == 0);
 
     // Fill both players hands with the testHand cards
     for(i = 0; i < 2 ; i++){
@@ -43,22 +42,23 @@ int main() {
     
     // Case 1: Play the village card
     handVal = handCard(0, &testG);
-    cardEffect(village, -1, -1, -1, &testG, 0, 0);
+    r = cardEffect(village, -1, -1, -1, &testG, 0, 0);
+    printf("Cardeffect Success: %d\n", r);
 
 #if (NOISY_TEST == 1)
-    printf("Village Card Played - Value = %d, expected = %d\n", handVal, VILLAGE_VAL);
-    printf("Player Hand Count - handCount = %d, expected = %d\n", numHandCards(&testG), numHandCards(&G));
-	printf("Deck Count = %d, expected = %d\n", testG.deckCount[thisPlayer], G.deckCount[thisPlayer] - 1);
-    printf("Coins = %d, expected = %d\n", testG.coins, G.coins);
-    printf("Player Num Actions - numActions = %d, expected = %d\n", testG.numActions, G.numActions);
+    printf("1. Village Card Played - Value = %d, expected = %d\n", handVal, VILLAGE_VAL);
+    printf("2. Player Hand Count - handCount = %d, expected = %d\n", numHandCards(&testG), numHandCards(&G));
+    printf("3. Deck Count = %d, expected = %d\n", testG.deckCount[thisPlayer], G.deckCount[thisPlayer] - 1);
+    printf("4. Coins = %d, expected = %d\n", testG.coins, G.coins);
+    //Bug
+    printf("Player Num Actions - numActions = %d, expected = %d\n", testG.numActions, G.numActions + 1);
 #endif        
-    assert(handVal == VILLAGE_VAL);    
-    assert(numHandCards(&testG) == numHandCards(&G));
-    assert(testG.deckCount[thisPlayer] == G.deckCount[thisPlayer] - 1);
-    assert(testG.coins == G.coins);
-    assert(testG.numActions == G.numActions);
+    myAssert(handVal == VILLAGE_VAL, "Card tested is not Village card!\n");    
+    myAssert(numHandCards(&testG) == numHandCards(&G), "Test Case 1");
+    myAssert(testG.deckCount[thisPlayer] == G.deckCount[thisPlayer] - 1, "Test Case 2");
+    myAssert(testG.coins == G.coins, "Test Case 3");
+    myAssert(testG.numActions == G.numActions + 1, "Test Case 4");
 
-    printf("All tests passed!\n");
-
+    printf("\nAll tests passed!\n");
     return 0;
 }

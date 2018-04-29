@@ -7,7 +7,7 @@
 #include "dominion_helpers.h"
 #include <string.h>
 #include <stdio.h>
-#include <assert.h>
+#include "myAssert.h"
 #include "rngs.h"
 
 // set NOISY_TEST to 0 to remove printfs from output
@@ -29,7 +29,6 @@ int main() {
 
     // Initialize game state
     r = initializeGame(NUM_PLAYERS, k, seed, &G); // Initialize a new game
-    assert(r == 0);
 
     // Fill both players hands with the testHand cards
     for(i = 0; i < 2 ; i++){
@@ -42,22 +41,22 @@ int main() {
     printf ("TESTING Smithy Card:\n");
 
     handVal = handCard(0, &testG);
-    cardEffect(smithy, -1, -1, -1, &testG, 0, 0);
+    r = cardEffect(smithy, -1, -1, -1, &testG, 0, 0);
+    printf("Cardeffect Success: %d\n", r);
+    #if (NOISY_TEST == 1)
+    printf("1. Smithy Card Played - Value = %d, expected = %d\n", handVal, SMITHY_VAL);
+    printf("2. Coins = %d, expected = %d\n", testG.coins, G.coins);
+    printf("3. Player Num Actions - numActions = %d, expected = %d\n", testG.numActions, G.numActions);
+    // Bug
+    printf("4. Deck Count = %d, expected = %d\n", testG.deckCount[thisPlayer], G.deckCount[thisPlayer] - 3);
+    printf("5. Player Hand Count - handCount = %d, expected = %d\n", numHandCards(&testG), numHandCards(&G) + 3);
+    #endif        
+    myAssert(handVal == SMITHY_VAL, "Card tested is not Smithy Card!");    
+    myAssert(testG.coins == G.coins, "Test Case 2");
+    myAssert(testG.numActions == G.numActions, "Test Case 3");
+    myAssert(testG.deckCount[thisPlayer] == G.deckCount[thisPlayer] - 3, "Test Case 4");
+    myAssert(numHandCards(&testG) == numHandCards(&G) + 3, "Test Case 5");
 
-#if (NOISY_TEST == 1)
-    printf("Smithy Card Played - Value = %d, expected = %d\n", handVal, SMITHY_VAL);
-    printf("Coins = %d, expected = %d\n", testG.coins, G.coins);
-    printf("Player Num Actions - numActions = %d, expected = %d\n", testG.numActions, G.numActions);
-	printf("Deck Count = %d, expected = %d\n", testG.deckCount[thisPlayer], G.deckCount[thisPlayer] - 3);
-    printf("Player Hand Count - handCount = %d, expected = %d\n", numHandCards(&testG), numHandCards(&G) + 3);
-#endif        
-    assert(handVal == SMITHY_VAL);    
-    assert(testG.coins == G.coins);
-    assert(testG.numActions == G.numActions);
-    assert(testG.deckCount[thisPlayer] == G.deckCount[thisPlayer] - 3);
-    assert(numHandCards(&testG) == numHandCards(&G) + 3);
-
-    printf("All tests passed!\n");
-
+    printf("\nAll tests passed!\n");
     return 0;
 }

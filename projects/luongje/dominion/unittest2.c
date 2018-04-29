@@ -30,7 +30,6 @@ int main() {
     // Initialize game state
     memset(&G, 23, sizeof(struct gameState)); // Clear game state
     r = initializeGame(NUM_PLAYERS, k, seed, &G); // Initialize a new game
-    myAssert(r = 0, "initializeGame");
     // Fill both players hands with the testHand cards
     // Give both Players COIN_BONUS coins to buy with
     for(i = 0; i < 2 ; i++){

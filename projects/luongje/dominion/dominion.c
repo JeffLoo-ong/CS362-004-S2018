@@ -1294,7 +1294,7 @@ int MineCard(int currentPlayer, struct gameState *state, int handPos, int choice
   int j, i;
   j = state->hand[currentPlayer][choice1];  //store card we will trash
   
-  printf("Cost of new card: %d\n", getCost(choice2));
+  // printf("Cost of new card: %d\n", getCost(choice2));
 
   if (state->hand[currentPlayer][choice1] < silver || state->hand[currentPlayer][choice1] > gold)
   {
